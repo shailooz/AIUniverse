@@ -1,0 +1,1076 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Six touch-screen games that teach AI to Grades 5 to 8.">
+<title>AI Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1FB;--surface:#FFFFFF;--surface2:#F5F6FD;--ink:#1E1B3A;--muted:#5B5A78;--line:#D8DBEE;
+  --good:#0E8F5A;--goodt:#D9F5E6;--bad:#D23B3B;--badt:#FFE0E0;
+  --c1:#6A58E0;--c1t:#E8E5FF;--c1d:#3B2FA8;
+  --c2:#0E8F70;--c2t:#D8F4EA;--c2d:#0A6650;
+  --c3:#2F6FDE;--c3t:#DCEBFF;--c3d:#1553A8;
+  --c4:#F2A100;--c4t:#FFEFC9;--c4d:#7A4E00;
+  --c5:#D2406F;--c5t:#FFE0EA;--c5d:#922B50;
+  --c6:#D6481F;--c6t:#FFE2D9;--c6d:#9A3014;
+  --fd:'Fredoka','Baloo 2','Trebuchet MS',system-ui,sans-serif;
+  --fb:'Nunito',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14132B;--surface:#1F1E3E;--surface2:#282751;--ink:#F1F0FF;--muted:#AEADCD;--line:#3A3968;
+    --good:#4CD694;--goodt:#12402C;--bad:#FF8484;--badt:#4A1D1D;
+    --c1:#8C7DFF;--c1t:#2B2766;--c1d:#CFC9FF;
+    --c2:#2CC7A0;--c2t:#11403A;--c2d:#8FE6CB;
+    --c3:#5C9BFF;--c3t:#173560;--c3d:#A9CEFF;
+    --c4:#FFB81F;--c4t:#4A3510;--c4d:#FFD27A;
+    --c5:#F0709A;--c5t:#4D1F31;--c5d:#FFB4CB;
+    --c6:#FF7A52;--c6t:#4D2316;--c6d:#FFB59F;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14132B;--surface:#1F1E3E;--surface2:#282751;--ink:#F1F0FF;--muted:#AEADCD;--line:#3A3968;
+  --good:#4CD694;--goodt:#12402C;--bad:#FF8484;--badt:#4A1D1D;
+  --c1:#8C7DFF;--c1t:#2B2766;--c1d:#CFC9FF;
+  --c2:#2CC7A0;--c2t:#11403A;--c2d:#8FE6CB;
+  --c3:#5C9BFF;--c3t:#173560;--c3d:#A9CEFF;
+  --c4:#FFB81F;--c4t:#4A3510;--c4d:#FFD27A;
+  --c5:#F0709A;--c5t:#4D1F31;--c5d:#FFB4CB;
+  --c6:#FF7A52;--c6t:#4D2316;--c6d:#FFB59F;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:17px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,h4{font-family:var(--fd);font-weight:600;line-height:1.15;margin:0}
+p{margin:0}
+.wrap{max-width:980px;margin:0 auto;padding:16px 16px 48px}
+:focus-visible{outline:3px solid var(--a,var(--c1));outline-offset:2px}
+button{font-family:inherit}
+.game[data-g="1"]{--a:var(--c1);--at:var(--c1t);--ad:var(--c1d);--on:#fff}
+.game[data-g="2"]{--a:var(--c2);--at:var(--c2t);--ad:var(--c2d);--on:#fff}
+.game[data-g="3"]{--a:var(--c3);--at:var(--c3t);--ad:var(--c3d);--on:#fff}
+.game[data-g="4"]{--a:var(--c4);--at:var(--c4t);--ad:var(--c4d);--on:#2B1D00}
+.game[data-g="5"]{--a:var(--c5);--at:var(--c5t);--ad:var(--c5d);--on:#fff}
+.game[data-g="6"]{--a:var(--c6);--at:var(--c6t);--ad:var(--c6d);--on:#fff}
+
+/* buttons */
+.btn{font:700 1rem var(--fb);border:0;border-radius:14px;padding:.7rem 1.1rem;min-height:48px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line),0 3px 0 var(--line);transition:transform .08s;touch-action:manipulation}
+.btn:active{transform:translateY(2px);box-shadow:inset 0 0 0 2px var(--line),0 1px 0 var(--line)}
+.btn.primary{background:var(--a,var(--c1));color:var(--on,#fff);box-shadow:0 4px 0 color-mix(in srgb,var(--a,var(--c1)) 65%,#000)}
+.btn.primary:active{box-shadow:0 1px 0 color-mix(in srgb,var(--a,var(--c1)) 65%,#000)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.small{min-height:40px;padding:.4rem .8rem;font-size:.92rem}
+.seg{display:inline-flex;background:var(--surface);border-radius:14px;padding:4px;box-shadow:inset 0 0 0 2px var(--line)}
+.seg button{border:0;background:transparent;color:var(--muted);font:700 .92rem var(--fb);padding:.45rem .8rem;border-radius:10px;min-height:40px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--a,var(--c1));color:var(--on,#fff)}
+.card{background:var(--surface);border-radius:20px;padding:18px;box-shadow:0 0 0 2px var(--line)}
+.sub{color:var(--muted);font-size:.95rem}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:99px;background:var(--at,var(--surface2));color:var(--ad,var(--ink));font-weight:700;font-size:.88rem}
+.pill{display:inline-block;padding:3px 12px;border-radius:99px;font-weight:800;font-size:.88rem;background:var(--surface);box-shadow:inset 0 0 0 2px var(--line);min-width:72px;text-align:center}
+.pill.on{background:var(--goodt);color:var(--good);box-shadow:inset 0 0 0 2px var(--good)}
+.pill.off{background:var(--badt);color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad)}
+
+/* hub */
+.hero{display:grid;gap:20px;align-items:center;padding:8px 0 20px}
+.hero h1{font-size:clamp(2.4rem,9vw,4rem);letter-spacing:-.01em}
+.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:30ch;margin:8px 0 16px}
+.robot{width:min(220px,60vw);justify-self:center}
+.robot .body{fill:color-mix(in srgb,var(--muted) 28%,var(--surface));stroke:var(--line);stroke-width:2}
+.robot .p{fill:var(--surface);stroke:var(--muted);stroke-width:2;stroke-dasharray:5 4}
+.robot .p.on{fill:var(--pc);stroke:none;animation:pop .5s ease-out}
+.robot .eye{fill:#fff}
+@keyframes pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+.robot .p{transform-box:fill-box;transform-origin:center}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+.gcard{display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:22px;background:var(--surface);box-shadow:0 0 0 2px var(--line)}
+.gcard .num{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font:600 1.4rem var(--fd);background:var(--a);color:var(--on)}
+.gcard h3{font-size:1.35rem}
+.gcard .top{display:flex;align-items:center;gap:12px}
+.gcard .foot{margin-top:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{font-weight:800;font-size:.85rem;color:var(--ad);background:var(--at);padding:3px 10px;border-radius:99px}
+.won{color:var(--good);font-weight:800;font-size:.92rem}
+.foot-note{margin-top:28px;color:var(--muted);font-size:.9rem;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;padding:8px 0;min-height:44px}
+
+/* game shell */
+.gbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.gbar .ttl{flex:1;min-width:180px}
+.gbar h2{font-size:1.6rem;color:var(--ad)}
+.steps{display:flex;gap:8px;margin:6px 0 14px;flex-wrap:wrap}
+.steps span{flex:1;min-width:60px;height:10px;border-radius:6px;background:var(--line)}
+.steps span.cur{background:color-mix(in srgb,var(--a) 55%,var(--line))}
+.steps span.done{background:var(--a)}
+.lvl{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.lvl h3{font-size:1.2rem}
+.brief{font-size:1.05rem;margin-bottom:14px;max-width:62ch}
+.stage{padding:16px}
+.fb{min-height:52px;margin:14px 0;padding:12px 16px;border-radius:16px;background:var(--surface2);color:var(--muted);font-weight:700}
+.fb.good{background:var(--goodt);color:var(--good);animation:pop .3s ease-out}
+.fb.bad{background:var(--badt);color:var(--bad)}
+.fb.info{background:var(--at);color:var(--ad)}
+.nav{display:flex;justify-content:flex-end;gap:10px}
+.qcard{max-width:620px;margin:0 auto;display:grid;gap:12px;text-align:left}
+.qopt{text-align:left;font-weight:700}
+.qopt.wrong{box-shadow:inset 0 0 0 2px var(--bad);color:var(--bad)}
+.reward{display:grid;gap:12px;justify-items:center;text-align:center;padding:12px}
+.reward .big{width:96px;height:96px;border-radius:28px;background:var(--a);display:grid;place-items:center;font-size:3rem;animation:pop .5s ease-out}
+h4{font-size:1.1rem;margin-bottom:6px}
+
+/* game 1 */
+.gk{display:grid;gap:18px}
+@media (min-width:780px){.gk{grid-template-columns:minmax(300px,2fr) 3fr}}
+.wrow{display:grid;grid-template-columns:minmax(96px,auto) 1fr 38px;gap:10px;align-items:center;margin:10px 0}
+.wlab{font-weight:800}
+.wval{font:600 1.2rem var(--fd);text-align:right}
+input[type=range]{width:100%;height:36px;accent-color:var(--a,var(--c1));touch-action:pan-y}
+.bot{display:flex;gap:12px;align-items:center;margin:14px 0;padding:12px;border-radius:16px;background:var(--at)}
+.botface{font-size:2.6rem;line-height:1}
+.botsay{font-weight:700;color:var(--ad)}
+.glist{display:grid;gap:8px}
+.grow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-radius:16px;background:var(--surface2);border:3px solid transparent}
+.grow.ok{border-color:var(--good)}.grow.bad{border-color:var(--bad)}
+.grow.now{background:var(--at)}
+.face{font-size:2rem;line-height:1}
+.gmid{display:grid;gap:6px;min-width:0}
+.chips{display:flex;gap:4px;flex-wrap:wrap;min-height:24px}
+.bar{position:relative;height:14px;background:var(--line);border-radius:8px;overflow:visible}
+.bar .fill{position:absolute;inset:0 auto 0 0;background:var(--muted);border-radius:8px;transition:width .25s}
+.bar .fill.pass{background:var(--good)}
+.bar .mark{position:absolute;top:-3px;bottom:-3px;width:4px;border-radius:2px;background:var(--ink)}
+.told{font-size:.82rem;color:var(--muted);font-weight:700}
+.gright{display:grid;gap:4px;justify-items:end}
+
+/* game 2 */
+.sorter{display:grid;gap:14px}
+.pool{display:flex;flex-wrap:wrap;gap:10px;min-height:92px;padding:12px;border-radius:18px;background:var(--surface2)}
+.item{display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:8px 10px;border-radius:14px;background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line),0 3px 0 var(--line);touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;min-width:92px;border:0;font:700 .85rem var(--fb)}
+.item .em{font-size:1.9rem;line-height:1.1}
+.item.sel{box-shadow:inset 0 0 0 3px var(--a),0 3px 0 var(--a)}
+.item.lifted{opacity:.3}
+.ghost{position:fixed;pointer-events:none;transform:translate(-50%,-50%) scale(1.1);z-index:60;opacity:.95}
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bin{min-height:150px;border-radius:20px;padding:12px;border:3px dashed;display:flex;flex-direction:column;gap:8px;cursor:pointer}
+.bin h4{margin:0}
+.bin.r{background:var(--c2t);border-color:var(--c2);color:var(--c2d)}
+.bin.t{background:var(--c6t);border-color:var(--c6);color:var(--c6d)}
+.bin.over{border-style:solid;transform:scale(1.02)}
+.bin .hold{display:flex;flex-wrap:wrap;gap:6px}
+.bin .item{min-width:0;padding:4px 8px;flex-direction:row;gap:6px}
+.bin .item .em{font-size:1.3rem}
+.testrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.res{display:grid;gap:8px}
+.rrow{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--surface2);animation:pop .3s ease-out}
+.rrow .em{font-size:1.8rem}
+.conf{height:10px;border-radius:6px;background:var(--line);overflow:hidden;margin-top:4px}
+.conf i{display:block;height:100%;background:var(--a)}
+.mark-ok{color:var(--good);font-weight:800}.mark-no{color:var(--bad);font-weight:800}
+.hist{display:flex;gap:6px;align-items:flex-end;height:46px}
+.hist b{width:22px;background:var(--a);border-radius:5px 5px 0 0;display:block}
+
+/* game 3 */
+.px3{display:grid;gap:18px}
+@media (min-width:780px){.px3{grid-template-columns:auto 1fr}}
+.pxgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;width:min(100%,360px);padding:4px;border-radius:12px;background:#0B0B18;touch-action:none;user-select:none;-webkit-user-select:none}
+.px{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font:800 .62rem var(--fb);border-radius:3px;color:#888}
+.px.mag{outline:3px solid #FFB81F;outline-offset:-2px;z-index:1}
+.fgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;width:min(100%,270px);padding:4px;border-radius:12px;background:#0B0B18}
+.fc{aspect-ratio:1;border-radius:3px;background:#17172B;display:flex;align-items:center;justify-content:center;font:800 .6rem var(--fb);color:#fff}
+.swatches{display:flex;gap:8px;margin:8px 0}
+.sw{width:44px;height:44px;border-radius:12px;border:3px solid var(--line);cursor:pointer;padding:0}
+.sw[aria-pressed="true"]{border-color:var(--a);box-shadow:0 0 0 2px var(--a)}
+.pb{display:grid;grid-template-columns:24px 1fr 52px;gap:8px;align-items:center;margin:6px 0}
+.pb .t{height:16px;background:var(--line);border-radius:8px;overflow:hidden}
+.pb .t i{display:block;height:100%;background:var(--muted);transition:width .2s}
+.pb.top .t i{background:var(--a)}
+.pb b{font-family:var(--fd);font-weight:600}
+.toolrow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+
+/* game 4 */
+.pupwrap{display:grid;gap:16px}
+@media (min-width:780px){.pupwrap{grid-template-columns:minmax(300px,3fr) 2fr}}
+.maze{display:grid;gap:5px;width:min(100%,520px)}
+.mc{aspect-ratio:1;border-radius:12px;background:var(--surface2);display:flex;align-items:center;justify-content:center;position:relative;font-size:1.7rem;box-shadow:inset 0 0 0 2px var(--line);border:0;padding:0;color:inherit}
+.mc.rock{background:color-mix(in srgb,var(--muted) 40%,var(--surface))}
+.mc.puddle{background:var(--c3t)}
+.mc.goal{background:var(--goodt)}
+.mc.trail{box-shadow:inset 0 0 0 3px var(--a)}
+.mc .arr{position:absolute;right:5px;top:1px;font:800 1.1rem var(--fb);color:var(--ad)}
+.mc .qv{position:absolute;left:5px;bottom:2px;font:800 .62rem var(--fb);color:var(--muted)}
+.mc .rw{position:absolute;left:4px;top:0;font-size:1rem}
+.ctl{display:grid;gap:12px;align-content:start}
+.stat{font-family:var(--fd);font-weight:600}
+
+/* game 5 */
+.wz{display:grid;gap:16px}
+.sent{font:600 clamp(1.4rem,5vw,2rem) var(--fd);padding:14px;border-radius:16px;background:var(--at);color:var(--ad)}
+.sent u{display:inline-block;min-width:90px;border-bottom:4px solid currentColor;text-align:center;text-decoration:none}
+.opts{display:flex;gap:10px;flex-wrap:wrap}
+.opt{font:800 1.05rem var(--fb);padding:.7rem 1.2rem;border-radius:99px;border:0;background:var(--surface);box-shadow:inset 0 0 0 2px var(--line),0 3px 0 var(--line);cursor:pointer;min-height:48px;color:var(--ink)}
+.opt.pick{box-shadow:inset 0 0 0 3px var(--a),0 3px 0 var(--a);background:var(--at)}
+.cols2{display:grid;gap:16px}
+@media (min-width:700px){.cols2{grid-template-columns:1fr 1fr}}
+.mbox{padding:14px;border-radius:16px;background:var(--surface2)}
+.pb5{display:grid;grid-template-columns:84px 1fr 48px;gap:8px;align-items:center;margin:6px 0}
+.pb5 .t{height:16px;background:var(--line);border-radius:8px;overflow:hidden}
+.pb5 .t i{display:block;height:100%;background:var(--muted);transition:width .3s}
+.pb5.you .t i{background:var(--a)}
+.pb5.you span{font-weight:800;color:var(--ad)}
+.story{font:600 1.5rem var(--fd);padding:14px;border-radius:16px;background:var(--surface2);min-height:70px}
+.dial{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}
+
+/* game 6 */
+.fair{display:grid;gap:16px}
+.grp{display:grid;grid-template-columns:96px 1fr auto;gap:10px;align-items:center;padding:10px;border-radius:16px;background:var(--surface2)}
+.grp .cards6{display:flex;flex-wrap:wrap;gap:2px;font-size:1.35rem;min-height:34px}
+.grp .nm{font-weight:800}
+.stepper{display:flex;gap:6px}
+.sq{width:48px;height:48px;border-radius:14px;border:0;font:600 1.5rem var(--fd);cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line),0 3px 0 var(--line)}
+.meter{display:grid;grid-template-columns:96px 1fr 52px;gap:10px;align-items:center;margin:6px 0}
+.meter .t{height:18px;border-radius:9px;background:var(--line);overflow:hidden}
+.meter .t i{display:block;height:100%;background:var(--a);transition:width .3s}
+.gapbox{padding:12px 14px;border-radius:14px;font-weight:800;background:var(--surface2)}
+.gapbox.ok{background:var(--goodt);color:var(--good)}
+.gapbox.no{background:var(--badt);color:var(--bad)}
+.art{display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center;margin:8px 0}
+.arts{display:flex;gap:6px;flex-wrap:wrap}
+.acard{width:62px;min-height:64px;border-radius:12px;border:0;background:var(--surface);box-shadow:inset 0 0 0 2px var(--line);display:grid;place-items:center;padding:4px;cursor:pointer;font:800 .82rem var(--fb);color:var(--ink)}
+.acard .st{color:var(--c4);letter-spacing:-1px}
+.acard.win{background:var(--c4t);box-shadow:inset 0 0 0 3px var(--c4)}
+.vote{display:grid;gap:10px;margin:10px 0;padding:14px;border-radius:16px;background:var(--surface2)}
+.vbtns{display:flex;gap:8px;flex-wrap:wrap}
+.vbtns .btn.sel{box-shadow:inset 0 0 0 3px var(--a),0 3px 0 var(--a)}
+.vb{display:grid;grid-template-columns:64px 1fr 30px;gap:8px;align-items:center}
+.vb .t{height:14px;background:var(--line);border-radius:7px;overflow:hidden}
+.vb .t i{display:block;height:100%;background:var(--muted)}
+.vb.mine .t i{background:var(--a)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app" class="wrap"></div>
+<noscript><p style="padding:24px">AI Quest needs JavaScript to run.</p></noscript>
+<script>
+(function(){
+'use strict';
+
+/* ================= LOGIC (pure functions) ================= */
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+/* --- game 2: sorter --- */
+const ITEMS={
+  tincan:{em:'🥫',name:'Tin can',a:['metal','hard','shiny','container'],y:'R'},
+  sodacan:{em:'🥤',name:'Soda can',a:['metal','hard','shiny','container'],y:'R'},
+  wbottle:{em:'🧴',name:'Water bottle',a:['plastic','hard','container'],y:'R'},
+  milkjug:{em:'🥛',name:'Milk jug',a:['plastic','hard','container'],y:'R'},
+  jar:{em:'🍯',name:'Glass jar',a:['glass','hard','shiny','container'],y:'R'},
+  gbottle:{em:'🍾',name:'Glass bottle',a:['glass','hard','shiny','container'],y:'R'},
+  news:{em:'📰',name:'Newspaper',a:['paper','flat','printed'],y:'R'},
+  mag:{em:'📖',name:'Magazine',a:['paper','flat','printed'],y:'R'},
+  card:{em:'📦',name:'Cardboard box',a:['paper','flat','box'],y:'R'},
+  pizza:{em:'🍕',name:'Greasy pizza box',a:['paper','flat','box','greasy'],y:'T'},
+  banana:{em:'🍌',name:'Banana peel',a:['food','soft','organic'],y:'T'},
+  apple:{em:'🍎',name:'Apple core',a:['food','soft','organic'],y:'T'},
+  egg:{em:'🥚',name:'Egg shells',a:['food','hard','organic'],y:'T'},
+  chips:{em:'🍟',name:'Chip bag',a:['plastic','soft','flat','shiny'],y:'T'},
+  candy:{em:'🍬',name:'Candy wrapper',a:['plastic','soft','flat','shiny'],y:'T'}
+};
+const MATERIAL=new Set(['metal','glass','plastic','paper','food']);
+function sim(a,b){
+  const wt=x=>MATERIAL.has(x)?3:1;
+  const sb=new Set(b);let inter=0,uni=0;
+  const all=new Set([...a,...b]);
+  all.forEach(x=>{const w=wt(x);uni+=w;if(a.includes(x)&&sb.has(x))inter+=w;});
+  return inter/uni;
+}
+function classify(id,taught){
+  const it=ITEMS[id];
+  const sc=Object.keys(taught).map(k=>({k,s:sim(it.a,ITEMS[k].a),l:taught[k]})).filter(o=>o.s>0).sort((x,y)=>y.s-x.s).slice(0,3);
+  if(!sc.length)return{g:'R',p:50,near:null,none:true};
+  let R=0,T=0;sc.forEach(o=>{if(o.l==='R')R+=o.s;else T+=o.s;});
+  const g=R>=T?'R':'T';const p=Math.round(Math.max(R,T)/(R+T)*100);
+  return{g,p:Math.max(p,50),near:sc[0].k};
+}
+
+/* --- game 3: digits --- */
+const TPL_ROWS={
+0:['00111100','01100110','11000011','11000011','11000011','11000011','01100110','00111100'],
+1:['00011000','00111000','01011000','00011000','00011000','00011000','00011000','01111110'],
+2:['00111100','01100110','00000110','00001100','00011000','00110000','01100000','01111110'],
+3:['00111100','01100110','00000110','00011100','00000110','00000110','01100110','00111100'],
+4:['00001100','00011100','00101100','01001100','11111110','00001100','00001100','00001100'],
+5:['01111110','01100000','01111100','00000110','00000110','00000110','01100110','00111100'],
+6:['00111100','01100000','11000000','11111100','11000110','11000110','01100110','00111100'],
+7:['11111110','00000110','00001100','00011000','00110000','00110000','00110000','00110000'],
+8:['00111100','01100110','01100110','00111100','01100110','01100110','01100110','00111100'],
+9:['00111100','01100110','01100110','00111110','00000110','00000110','00001100','00111000']};
+function tplPx(d){return TPL_ROWS[d].join('').split('').map(c=>c==='1'?255:0);}
+function blur(g){
+  const o=new Array(64).fill(0);
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){let s=0,n=0;
+    for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){const rr=r+dr,cc=c+dc;if(rr>=0&&rr<8&&cc>=0&&cc<8){s+=g[rr*8+cc];n++;}}
+    o[r*8+c]=s/n;}
+  return o;
+}
+const TPLV=[0,1,2,3,4,5,6,7,8,9].map(d=>blur(tplPx(d).map(v=>v/255)));
+const nrm=v=>Math.sqrt(v.reduce((a,b)=>a+b*b,0));
+function digitProbs(px){
+  const v=blur(px.map(x=>x/255));const n=nrm(v);
+  if(n<0.05)return null;
+  const sims=TPLV.map(t=>v.reduce((a,b,i)=>a+b*t[i],0)/(n*nrm(t)));
+  const mx=Math.max(...sims);const ex=sims.map(s=>Math.exp((s-mx)*32));const z=ex.reduce((a,b)=>a+b,0);
+  return ex.map(e=>e/z);
+}
+const FILTERS={
+  h:{name:'Horizontal lines',k:[-1,-1,-1,2,2,2,-1,-1,-1]},
+  v:{name:'Vertical lines',k:[-1,2,-1,-1,2,-1,-1,2,-1]}
+};
+function convAt(px,k,r,c){let s=0;for(let i=0;i<3;i++)for(let j=0;j<3;j++)s+=k[i*3+j]*(px[(r+i)*8+(c+j)]/255);return s;}
+
+/* --- game 5: tiny language model --- */
+const CORPUS=['the cat sat on the mat','the cat sat on the sofa','the cat sat on the floor','the cat sat on the mat','the dog sat on the floor','the dog sat on the rug','the cat slept on the sofa','the dog slept on the bed','the cat sat in the sun','the pilot sat in the cockpit',
+'the cat slept in the sun','the wizard slept in the tower','the wizard lived in the tower','the cat sat on the mat','the pilot flew the plane','the pilot sat in the cockpit','the pilot landed the plane','the bird sat on the roof','the bird sat on the branch','the cat chased the mouse','the dog chased the ball','the dog chased the cat','the cat ate the fish','the dog ate the bone','the fish swam in the pond','the fish swam in the sea','the frog sat on the log','the frog jumped in the pond','the astronaut flew to the moon','the astronaut walked on the moon','the robot walked to the door','the robot sat on the chair','the robot sat on the shelf','the robot said hello','the robot learned to dance','the teacher sat at the desk','the teacher read a book','the student read a book','the student sat at the desk','the sun rose over the hill','the moon rose over the sea','the wizard cast a spell','the wizard sat in the tower','the wizard walked to the castle','the wizard flew over the castle','the dragon slept on the mountain','the dragon flew over the castle','the dragon lived in a volcano','the dragon sat on the roof','the dog sat on the porch','the dog sat on the rug','the wizard sat on the mountain'];
+const STOP=new Set(['the','a','in','on','to','over','at','sat']);
+const VOCAB=[...new Set(CORPUS.join(' ').split(' '))].filter(w=>!STOP.has(w));
+function lmDist(text,sents,T){
+  const toks=text.toLowerCase().trim().split(/\s+/);
+  const l1=toks[toks.length-1],l2=toks[toks.length-2];
+  const ctx=new Set(toks.filter(w=>!STOP.has(w)));
+  const sc={};
+  for(const s of sents){
+    const t=s.split(' ');let shared=0;for(const w of t)if(ctx.has(w))shared++;
+    const mult=1+3*Math.min(shared,3);
+    for(let i=1;i<t.length;i++){
+      if(t[i-1]!==l1)continue;
+      if(i<2&&toks.length>1)continue;
+      const w=(i>=2&&t[i-2]===l2)?1:0.25;
+      sc[t[i]]=(sc[t[i]]||0)+w*mult;
+    }
+  }
+  let tot=Object.values(sc).reduce((a,b)=>a+b,0);
+  if(!tot){sc.then=3;sc.and=2;sc.the=2;tot=7;}
+  const p={};for(const w in sc)p[w]=sc[w]/tot;
+  const eps=Math.min(0.55,0.02+Math.max(0,T-1)*0.22);
+  VOCAB.forEach(w=>{p[w]=(p[w]||0)*(1-eps)+eps/VOCAB.length;});
+  let z=0;const q={};for(const w in p){q[w]=Math.pow(p[w],1/T);z+=q[w];}
+  return Object.keys(q).map(w=>({w,p:q[w]/z})).sort((a,b)=>b.p-a.p);
+}
+function sampleK(arr,k){
+  const pool=arr.slice(0,40).map(o=>({...o}));const out=[];
+  while(out.length<k&&pool.length){
+    const z=pool.reduce((a,o)=>a+o.p,0);let r=Math.random()*z,i=0;
+    for(;i<pool.length-1;i++){r-=pool[i].p;if(r<=0)break;}
+    out.push(pool.splice(i,1)[0]);
+  }
+  return out;
+}
+
+/* --- game 4: q-learning world --- */
+const ACT=[[0,-1,'↑'],[1,0,'→'],[0,1,'↓'],[-1,0,'←']];
+function makeWorld(rows,custom0){
+  const H=rows.length,W=rows[0].length;
+  const w={H,W,rows,start:[0,0],goal:[0,0],custom:[],Q:[]};
+  for(let y=0;y<H;y++){w.custom.push([]);w.Q.push([]);
+    for(let x=0;x<W;x++){
+      const ch=rows[y][x];if(ch==='S')w.start=[x,y];if(ch==='B')w.goal=[x,y];
+      w.custom[y].push(0);w.Q[y].push([0,0,0,0]);
+    }}
+  (custom0||[]).forEach(([x,y,v])=>{w.custom[y][x]=v;});
+  return w;
+}
+function wStep(w,x,y,a){
+  const nx=x+ACT[a][0],ny=y+ACT[a][1];
+  if(nx<0||ny<0||nx>=w.W||ny>=w.H||w.rows[ny][nx]==='#')return{nx:x,ny:y,r:-0.05,done:false};
+  const done=w.rows[ny][nx]==='B';
+  return{nx,ny,r:(done?1:0)+w.custom[ny][nx],done};
+}
+function bestA(w,x,y,rand){
+  const q=w.Q[y][x];const mx=Math.max(...q);
+  const c=q.map((v,i)=>v>=mx-1e-9?i:-1).filter(i=>i>=0);
+  return rand?c[Math.floor(Math.random()*c.length)]:c[0];
+}
+function pickA(w,x,y,eps){return Math.random()<eps?Math.floor(Math.random()*4):bestA(w,x,y,true);}
+function qUpdate(w,x,y,a,r,nx,ny,done){
+  const best=done?0:Math.max(...w.Q[ny][nx]);
+  w.Q[y][x][a]+=0.5*(r+0.9*best-w.Q[y][x][a]);
+}
+function episode(w,eps){
+  let [x,y]=w.start;
+  for(let t=0;t<40;t++){
+    const a=pickA(w,x,y,eps);const s=wStep(w,x,y,a);
+    qUpdate(w,x,y,a,s.r,s.nx,s.ny,s.done);x=s.nx;y=s.ny;if(s.done)break;
+  }
+}
+function greedyPath(w){
+  let [x,y]=w.start;const path=[[x,y]];
+  for(let t=0;t<25;t++){
+    const a=bestA(w,x,y,true);const s=wStep(w,x,y,a);x=s.nx;y=s.ny;path.push([x,y]);if(s.done)break;
+  }
+  return path;
+}
+
+/* ================= helpers ================= */
+const $=(s,r=document)=>r.querySelector(s);
+function h(tag,props,...kids){
+  const e=document.createElement(tag);
+  for(const [k,v] of Object.entries(props||{})){
+    if(v===false||v==null)continue;
+    if(k==='class')e.className=v;
+    else if(k==='style')e.style.cssText=v;
+    else if(k.slice(0,2)==='on')e.addEventListener(k.slice(2),v);
+    else e.setAttribute(k,v);
+  }
+  for(const kid of kids.flat(Infinity)){
+    if(kid==null||kid===false)continue;
+    e.append(kid.nodeType?kid:document.createTextNode(kid));
+  }
+  return e;
+}
+const app=$('#app');
+let S={grade:'56',done:{}};
+try{const o=JSON.parse(localStorage.getItem('aiquest-v1')||'null');if(o)S=Object.assign(S,o);}catch(e){}
+function save(){try{localStorage.setItem('aiquest-v1',JSON.stringify(S));}catch(e){}}
+const is78=()=>S.grade==='78';
+function gradeSeg(onChange){
+  const mk=(v,t)=>h('button',{type:'button','aria-pressed':String(S.grade===v),onclick:()=>{S.grade=v;save();onChange();}},t);
+  return h('div',{class:'seg',role:'group','aria-label':'Grade level'},mk('56','Grades 5–6'),mk('78','Grades 7–8'));
+}
+function drag(el,{onDrop,onTap,bins}){
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onTap();}});
+  el.addEventListener('pointerdown',e=>{
+    if(e.button>0)return;
+    e.preventDefault();
+    const sx=e.clientX,sy=e.clientY;let ghost=null,moved=false;
+    const clearHl=()=>bins().forEach(b=>b.classList.remove('over'));
+    const move=ev=>{
+      if(!moved&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>8){
+        moved=true;ghost=el.cloneNode(true);ghost.classList.add('ghost');document.body.append(ghost);el.classList.add('lifted');
+      }
+      if(ghost){
+        ghost.style.left=ev.clientX+'px';ghost.style.top=ev.clientY+'px';
+        clearHl();const t=document.elementFromPoint(ev.clientX,ev.clientY);const b=t&&t.closest('[data-bin]');if(b)b.classList.add('over');
+      }
+    };
+    const up=ev=>{
+      window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',up);
+      clearHl();
+      if(ghost){ghost.remove();el.classList.remove('lifted');const t=document.elementFromPoint(ev.clientX,ev.clientY);onDrop(t&&t.closest('[data-bin]'));}
+      else onTap();
+    };
+    window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);window.addEventListener('pointercancel',up);
+  });
+}
+
+/* ================= robot + hub ================= */
+const GAMES=[];
+function robotSVG(){
+  const on=n=>S.done[n]?' on':'';
+  const c=n=>`style="--pc:var(--c${n})"`;
+  const count=Object.keys(S.done).filter(k=>S.done[k]).length;
+  const wrap=h('div');
+  wrap.innerHTML=`<svg class="robot" viewBox="0 0 220 290" role="img" aria-label="Robot with ${count} of 6 parts built">
+  <rect class="body" x="24" y="128" width="18" height="70" rx="9"/><rect class="body" x="178" y="128" width="18" height="70" rx="9"/>
+  <rect class="body" x="48" y="118" width="124" height="98" rx="18"/><rect class="body" x="100" y="102" width="20" height="18"/>
+  <rect class="body" x="56" y="36" width="108" height="72" rx="18"/>
+  <rect class="p p1${on(1)}" ${c(1)} x="74" y="8" width="72" height="30" rx="14"/>
+  <circle class="p p3${on(3)}" ${c(3)} cx="86" cy="70" r="14"/><circle class="p p3${on(3)}" ${c(3)} cx="134" cy="70" r="14"/>
+  ${S.done[3]?'<circle class="eye" cx="90" cy="66" r="4"/><circle class="eye" cx="138" cy="66" r="4"/>':''}
+  <rect class="p p5${on(5)}" ${c(5)} x="88" y="91" width="44" height="12" rx="6"/>
+  <circle class="p p6${on(6)}" ${c(6)} cx="110" cy="150" r="20"/>
+  <rect class="p p2${on(2)}" ${c(2)} x="82" y="180" width="56" height="28" rx="5"/>
+  <rect class="p p4${on(4)}" ${c(4)} x="70" y="218" width="26" height="46" rx="6"/><rect class="p p4${on(4)}" ${c(4)} x="124" y="218" width="26" height="46" rx="6"/>
+  <rect class="p p4${on(4)}" ${c(4)} x="58" y="262" width="42" height="16" rx="8"/><rect class="p p4${on(4)}" ${c(4)} x="120" y="262" width="42" height="16" rx="8"/>
+  </svg>`;
+  return wrap.firstElementChild;
+}
+function hub(){
+  const count=GAMES.filter(g=>S.done[g.id]).length;
+  app.replaceChildren();
+  const hero=h('div',{class:'hero'});
+  hero.style.gridTemplateColumns='';
+  const left=h('div',{},
+    h('h1',{},count===6?'Robot online!':'AI Quest'),
+    h('p',{class:'lead'},count===6?'You trained all six parts. Replay any game to go deeper.':'Train a robot, learn how AI really works. Finish a game to earn a robot part.'),
+    h('div',{style:'display:flex;gap:12px;align-items:center;flex-wrap:wrap'},gradeSeg(hub),h('span',{class:'sub'},count+' of 6 parts built')));
+  hero.append(left,robotSVG());
+  const mq=window.matchMedia('(min-width:720px)');
+  if(mq.matches)hero.style.gridTemplateColumns='1.4fr 1fr';
+  const cards=h('div',{class:'cards'});
+  GAMES.forEach(g=>{
+    const done=!!S.done[g.id];
+    const card=h('article',{class:'gcard game','data-g':g.id},
+      h('div',{class:'top'},h('div',{class:'num'},String(g.id)),h('div',{},h('h3',{},g.title),h('span',{class:'tag'},g.concept))),
+      h('p',{},g.tagline),
+      h('div',{class:'foot'},
+        h('button',{class:'btn primary',type:'button',onclick:()=>openGame(g)},done?'Play again':'Play'),
+        done?h('span',{class:'won'},'✓ '+g.part+' part earned'):h('span',{class:'sub'},g.id===2?'A great first game':'Unlocks: '+g.part)));
+    cards.append(card);
+  });
+  const foot=h('div',{class:'foot-note'},
+    h('span',{},'Progress saves on this device.'),
+    h('button',{class:'linkbtn',type:'button',onclick:()=>{if(confirm('Reset all progress?')){S.done={};save();hub();}}},'Reset progress'));
+  app.append(hero,cards,foot);
+  window.scrollTo(0,0);
+}
+
+/* ================= game shell ================= */
+function openGame(g){
+  let lv=0;const timers=[];
+  const root=h('section',{class:'game','data-g':g.id});
+  const gradeWrap=h('div');
+  const bar=h('div',{class:'gbar'},
+    h('button',{class:'btn small',type:'button',onclick:()=>{clearTimers();hub();}},'← Robot'),
+    h('div',{class:'ttl'},h('h2',{},g.title),h('p',{class:'sub'},g.concept)),gradeWrap);
+  const steps=h('div',{class:'steps'},g.levels.map(()=>h('span')));
+  const lvlTitle=h('h3');const lvlChip=h('span',{class:'chip'});
+  const brief=h('p',{class:'brief'});
+  const stage=h('div',{class:'stage card'});
+  const fb=h('div',{class:'fb',role:'status','aria-live':'polite'});
+  const next=h('button',{class:'btn primary',type:'button'});
+  const nav=h('div',{class:'nav'},next);
+  root.append(bar,steps,h('div',{class:'lvl'},lvlTitle,lvlChip),brief,stage,fb,nav);
+  function clearTimers(){timers.splice(0).forEach(t=>{clearTimeout(t);clearInterval(t);});}
+  const ctx={
+    stage,g,get lv(){return lv;},
+    brief:t=>{brief.textContent=t;},
+    later:(fn,ms)=>{const t=setTimeout(fn,ms);timers.push(t);return t;},
+    every:(fn,ms)=>{const t=setInterval(fn,ms);timers.push(t);return t;},
+    say:(m,tone)=>{fb.className='fb '+(tone||'info');fb.textContent=m;},
+    win:m=>{fb.className='fb good';fb.textContent=m;next.disabled=false;steps.children[lv].classList.add('done');},
+    stop:clearTimers
+  };
+  function load(){
+    clearTimers();stage.replaceChildren();fb.className='fb';fb.textContent='';next.disabled=true;
+    next.textContent=lv===g.levels.length-1?'Finish: check question':'Next level';
+    lvlTitle.textContent='Level '+(lv+1)+' of '+g.levels.length;lvlChip.textContent=g.levels[lv];
+    [...steps.children].forEach((s,i)=>{s.className=i<lv?'done':i===lv?'cur':'';});
+    gradeWrap.replaceChildren(gradeSeg(load));
+    g.level(ctx,lv);
+  }
+  next.addEventListener('click',()=>{if(lv<g.levels.length-1){lv++;load();window.scrollTo(0,0);}else{quiz();}});
+  function quiz(){
+    clearTimers();
+    const q=g.quiz;root.replaceChildren(bar);
+    const card=h('div',{class:'card qcard'},h('span',{class:'chip'},'Check question'),h('h3',{},q.q));
+    const msg=h('p',{class:'sub',role:'status','aria-live':'polite'});
+    q.opts.forEach((o,i)=>{
+      const b=h('button',{class:'btn qopt',type:'button'},o);
+      b.addEventListener('click',()=>{
+        if(i===q.ans){
+          S.done[g.id]=true;save();
+          root.replaceChildren(bar,h('div',{class:'card reward'},
+            h('div',{class:'big'},g.icon),h('h2',{},'You built the '+g.part+'!'),h('p',{},q.why),
+            h('button',{class:'btn primary',type:'button',onclick:hub},'Back to the robot')));
+        }else{b.classList.add('wrong');msg.textContent='Not quite. '+q.hint;}
+      });
+      card.append(b);
+    });
+    card.append(msg);root.append(card);window.scrollTo(0,0);
+  }
+  app.replaceChildren(root);window.scrollTo(0,0);load();
+}
+
+/* ================= GAME 1: Gatekeeper ================= */
+const F1={ticket:['🎟️','Ticket'],costume:['🎭','Costume'],noisy:['📢','Noisy'],snacks:['🍿','Snacks']};
+const FACES=['🙂','😎','🤠','🥳','🤓','😺','🧑‍🚀','👩‍🎤','🧙','🦊'];
+const L1=[
+ {f:['ticket'],b:'Let in guests who have a ticket. Drag the Ticket slider until the bouncer agrees with every guest.',g:[[1],[0],[1],[0]],w:[1,0,1,0]},
+ {f:['ticket','costume'],b:'Guests need a ticket and a costume. One clue alone should not be enough.',g:[[1,1],[1,0],[0,1],[0,0],[1,1],[1,0]],w:[1,0,0,0,1,0]},
+ {f:['ticket','costume','noisy'],b:'Ticket plus costume gets in, but noisy guests must be blocked. A weight can be negative.',g:[[1,1,0],[1,1,1],[1,0,0],[0,1,0],[1,1,0],[0,0,1],[1,0,1]],w:[1,0,0,0,1,0,0]},
+ {f:['ticket','costume','noisy','snacks'],b:'The rule is hidden. The bouncer has seen these examples. Find weights that match all of them.',g:[[1,0,0,0],[0,1,0,0],[0,0,0,1],[1,0,1,0],[1,1,0,0],[0,1,0,1],[1,0,1,1],[1,1,1,1],[0,1,1,1],[1,0,0,1]],hid:[3,1,-2,1]}
+];
+function g1Level(ctx,i){
+  const L=L1[i],feats=L.f;
+  const want=L.hid?L.g.map(g=>+(g.reduce((a,v,k)=>a+v*L.hid[k],0)>=3)):L.w;
+  const w=feats.map(()=>0);let th=3;
+  ctx.brief(L.b);
+  const pct=s=>clamp((s+6)/18*100,0,100);
+  const wp=h('div',{},h('h4',{},'Weights'),h('p',{class:'sub'},'How much does each clue count? Right adds to the score, left subtracts.'));
+  feats.forEach((f,k)=>{
+    const out=h('output',{class:'wval'},'0');
+    const inp=h('input',{type:'range',min:'-5',max:'5',step:'1',value:'0','aria-label':F1[f][1]+' weight'});
+    inp.addEventListener('input',()=>{w[k]=+inp.value;out.textContent=(w[k]>0?'+':'')+w[k];update();});
+    wp.append(h('div',{class:'wrow'},h('span',{class:'wlab'},F1[f][0]+' '+F1[f][1]),inp,out));
+  });
+  let thOut=null;
+  if(is78()){
+    thOut=h('output',{class:'wval'},'3');
+    const ti=h('input',{type:'range',min:'0',max:'8',step:'1',value:'3','aria-label':'Bias: score needed to enter'});
+    ti.addEventListener('input',()=>{th=+ti.value;thOut.textContent=th;update();});
+    wp.append(h('div',{class:'wrow'},h('span',{class:'wlab'},'Bias'),ti,thOut),h('p',{class:'sub'},'Bias is the score a guest needs before the door opens.'));
+  }
+  const face=h('div',{class:'botface'},'🤖'),say=h('div',{class:'botsay'},'Move a slider, then open the gate.');
+  const runBtn=h('button',{class:'btn primary',type:'button'},'Open the gate');
+  wp.append(h('div',{class:'bot'},face,say),runBtn);
+  const rows=L.g.map((g,gi)=>{
+    const chips=h('div',{class:'chips'},g.some(v=>v)?g.map((v,k)=>v?h('span',{class:'chip'},F1[feats[k]][0]+' '+F1[feats[k]][1]):null):h('span',{class:'told'},'no clues'));
+    const fill=h('i',{class:'fill'}),mark=h('b',{class:'mark'});
+    const bar=h('div',{class:'bar'},fill,mark);
+    const info=h('span',{class:'told'});
+    const pill=h('span',{class:'pill'});
+    const row=h('div',{class:'grow'},h('div',{class:'face'},FACES[gi%FACES.length]),h('div',{class:'gmid'},chips,bar,info),
+      h('div',{class:'gright'},pill,h('span',{class:'told'},want[gi]?'Should enter':'Should stay out')));
+    return{g,row,fill,mark,pill,info,gi};
+  });
+  const list=h('div',{class:'glist'},rows.map(r=>r.row));
+  const score=g=>g.reduce((a,v,k)=>a+v*w[k],0);
+  function update(){
+    rows.forEach(r=>{
+      const s=score(r.g),pass=s>=th;
+      r.fill.style.width=pct(s)+'%';r.fill.classList.toggle('pass',pass);r.mark.style.left=`calc(${pct(th)}% - 2px)`;
+      r.pill.textContent=pass?'Opens':'Shut';r.pill.className='pill '+(pass?'on':'off');
+      r.info.textContent=is78()?`score ${s} · needs ${th}`:'';
+      const ok=pass===!!want[r.gi];r.row.classList.toggle('ok',ok);r.row.classList.toggle('bad',!ok);
+    });
+  }
+  runBtn.addEventListener('click',()=>{
+    runBtn.disabled=true;let k=0;
+    rows.forEach(r=>r.row.classList.remove('now'));
+    const stepRun=()=>{
+      rows.forEach(r=>r.row.classList.remove('now'));
+      if(k>=rows.length){
+        runBtn.disabled=false;
+        const badIdx=rows.findIndex((r,ix)=>(score(r.g)>=th)!==!!want[ix]);
+        if(badIdx<0){face.textContent='😄';say.textContent='Perfect door. Every guest was handled right.';ctx.win('The bouncer got every guest right. You tuned the weights.');}
+        else{face.textContent='😵';const letIn=score(rows[badIdx].g)>=th;say.textContent=letIn?'Oops, I let in someone who should stay out!':'Oops, I turned away someone who should come in!';
+          ctx.say(letIn?'A guest slipped in. Lower a weight that helped them, or raise the bias.':'A guest was turned away. Raise a weight that helps them, or lower the bias.','bad');}
+        return;
+      }
+      const r=rows[k];r.row.classList.add('now');
+      const pass=score(r.g)>=th,ok=pass===!!want[k];
+      face.textContent=ok?'🙂':'😕';say.textContent=pass?'Come on in!':'Sorry, not tonight.';
+      k++;ctx.later(stepRun,650);
+    };
+    stepRun();
+  });
+  update();
+  ctx.stage.append(h('div',{class:'gk'},wp,h('div',{},h('h4',{},'Guests at the door'),list)));
+}
+
+/* ================= GAME 2: Sorter ================= */
+const L2=[
+ {b:'Teach the bot with these four items: drag each into Recycle or Trash. Then test it on new things.',pool:['tincan','banana','news','chips'],test:['apple','card','candy'],need:2,must:4},
+ {b:'This bot knows very little. Teach it the chip bag, candy wrapper and tin can, then press Test. Watch what goes wrong, and teach it more.',pool:['chips','candy','tincan','banana','egg','wbottle','jar'],test:['milkjug','gbottle','apple'],need:3},
+ {b:'You can only teach six examples. Choose ones that show different kinds of things.',pool:['tincan','wbottle','jar','news','card','pizza','banana','egg','chips','candy'],test:['sodacan','milkjug','gbottle','mag','apple'],need:4,budget:6},
+ {b:'Someone mislabeled some training items. Tap an item in a bin to move it to the other bin. Then test.',pre:{tincan:'R',wbottle:'R',news:'T',card:'R',banana:'R',egg:'T',chips:'T',candy:'T'},test:['mag','apple','milkjug','sodacan'],need:4}
+];
+function g2Level(ctx,i){
+  const L=L2[i];ctx.brief(L.b);
+  const taught=Object.assign({},L.pre||{});
+  const pool=L.pool?L.pool.slice():Object.keys(L.pre);
+  let sel=null;const hist=[];
+  const poolEl=h('div',{class:'pool','aria-label':'Items to teach'});
+  const binR=h('div',{class:'bin r','data-bin':'R',role:'button',tabindex:'0','aria-label':'Recycle bin'});
+  const binT=h('div',{class:'bin t','data-bin':'T',role:'button',tabindex:'0','aria-label':'Trash bin'});
+  const count=h('span',{class:'chip'});
+  const testBtn=h('button',{class:'btn primary',type:'button'},'Test the bot');
+  const res=h('div',{class:'res','aria-live':'polite'});
+  const histEl=h('div');
+  function place(id,bin){
+    if(!bin)return;
+    const b=bin.dataset.bin;
+    if(!taught[id]&&L.budget&&Object.keys(taught).length>=L.budget){ctx.say('That is the limit: '+L.budget+' examples. Tap one in a bin to take it back.','bad');return;}
+    taught[id]=b;sel=null;draw();
+  }
+  function mkItem(id,inBin){
+    const it=ITEMS[id];
+    const el=h('button',{class:'item',type:'button','data-id':id,'aria-label':it.name},h('span',{class:'em'},it.em),inBin?null:h('span',{},it.name));
+    if(inBin){el.append(h('span',{},it.name));el.addEventListener('click',()=>{if(L.pre){taught[id]=taught[id]==='R'?'T':'R';}else delete taught[id];draw();});}
+    else{
+      if(sel===id)el.classList.add('sel');
+      drag(el,{bins:()=>[binR,binT],onDrop:b=>place(id,b),onTap:()=>{sel=sel===id?null:id;draw();}});
+    }
+    return el;
+  }
+  function draw(){
+    poolEl.replaceChildren(...pool.filter(id=>!taught[id]).map(id=>mkItem(id,false)));
+    if(!poolEl.children.length)poolEl.append(h('span',{class:'sub'},'All items placed.'));
+    [[binR,'R','Recycle'],[binT,'T','Trash']].forEach(([el,k,name])=>{
+      const hold=h('div',{class:'hold'},Object.keys(taught).filter(id=>taught[id]===k).map(id=>mkItem(id,true)));
+      el.replaceChildren(h('h4',{},name),hold,Object.keys(taught).some(id=>taught[id]===k)?null:h('span',{style:'opacity:.7;font-weight:700'},'Drop items here'));
+    });
+    count.textContent='Examples taught: '+Object.keys(taught).length+(L.budget?' of '+L.budget:'');
+  }
+  [binR,binT].forEach(b=>{
+    const act=()=>{if(sel)place(sel,b);};
+    b.addEventListener('click',e=>{if(e.target===b||e.target.tagName==='H4'||e.target.classList.contains('hold'))act();});
+    b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act();}});
+  });
+  testBtn.addEventListener('click',()=>{
+    if(L.must&&Object.keys(taught).length<L.must){ctx.say('Teach all '+L.must+' items first, then test.','bad');return;}
+    if(Object.keys(taught).length<2){ctx.say('Teach at least two examples first.','bad');return;}
+    testBtn.disabled=true;res.replaceChildren();let right=0,k=0,firstWrong=null;
+    const next=()=>{
+      if(k>=L.test.length){
+        testBtn.disabled=false;const acc=Math.round(right/L.test.length*100);hist.push(acc);
+        histEl.replaceChildren(is78()?h('div',{},h('p',{class:'sub'},'Accuracy each round'),h('div',{class:'hist'},hist.map(a=>h('b',{style:`height:${Math.max(a*0.46,4)}px`,title:a+'%'})))):null);
+        if(right>=L.need)ctx.win('The bot got '+right+' of '+L.test.length+' right ('+acc+'%). Good teaching.');
+        else if(firstWrong){const f=firstWrong;ctx.say('The bot got '+right+' of '+L.test.length+'. It called '+ITEMS[f.id].name+' '+(f.g==='R'?'Recycle':'Trash')+(f.near?', because it looks most like '+ITEMS[f.near].name+'.':'.')+' Teach it more examples like that item.','bad');}
+        return;
+      }
+      const id=L.test[k++];const c=classify(id,taught);const ok=c.g===ITEMS[id].y;if(ok)right++;else if(!firstWrong)firstWrong={id,g:c.g,near:c.near};
+      res.append(h('div',{class:'rrow'},h('span',{class:'em'},ITEMS[id].em),
+        h('div',{},h('b',{},ITEMS[id].name),h('div',{},'Bot says: ',h('b',{},c.g==='R'?'Recycle':'Trash'),c.none?' (no idea)':''),h('div',{class:'conf'},h('i',{style:`width:${c.p}%`}))),
+        h('div',{style:'text-align:right'},h('div',{class:ok?'mark-ok':'mark-no'},ok?'Right':'Wrong'),h('div',{class:'sub'},c.p+'% sure'))));
+      ctx.later(next,700);
+    };
+    next();
+  });
+  draw();
+  ctx.stage.append(h('div',{class:'sorter'},
+    h('div',{},h('h4',{},L.pre?'Training items':'Items to teach'),poolEl),
+    h('div',{class:'bins'},binR,binT),
+    h('div',{class:'testrow'},testBtn,count,h('span',{class:'sub'},'Drag items, or tap an item and then a bin.')),
+    res,histEl));
+}
+
+/* ================= GAME 3: Pixel Detective ================= */
+function g3Level(ctx,i){
+  const KIND=['draw','gray','fool','filter'][i];
+  const hint={
+    draw:'Draw the number 7 by tapping or dragging on the grid. White pixels are 255, black pixels are 0. The bot guesses live.',
+    gray:'Now use shades. Pick a brightness, then paint a number 3. Pixels can be anywhere from 0 to 255.',
+    fool:'This is a clean 7. Flip pixels to trick the bot into guessing something else. Fewer flips is sneakier.',
+    filter:'Computers find shapes with filters. Pick a filter, drag it over the 7 (or press Scan), and watch the feature map light up.'}[KIND];
+  ctx.brief(hint);
+  const target=KIND==='gray'?3:7;
+  let px=KIND==='fool'||KIND==='filter'?tplPx(7):new Array(64).fill(0);
+  let showNums=KIND==='draw'||KIND==='gray'||is78();let brush=255,flips=0;
+  const grid=h('div',{class:'pxgrid',role:'group','aria-label':'8 by 8 pixel grid'});
+  const cells=[];
+  for(let n=0;n<64;n++){const c=h('div',{class:'px','data-i':n});cells.push(c);grid.append(c);}
+  const probBox=h('div'),sayBox=h('p',{class:'sub'});
+  function paintCells(){
+    cells.forEach((c,n)=>{const v=px[n];c.style.background=`rgb(${v},${v},${v})`;c.style.color=v>130?'#222':'#9a9ab5';c.textContent=showNums?v:'';});
+  }
+  function readout(){
+    const p=digitProbs(px);probBox.replaceChildren();
+    if(!p){probBox.append(h('p',{class:'sub'},'Nothing drawn yet. The bot sees only zeros.'));return null;}
+    const order=p.map((v,d)=>[d,v]).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    order.forEach(([d,v],k)=>probBox.append(h('div',{class:'pb'+(k===0?' top':'')},h('b',{},String(d)),h('div',{class:'t'},h('i',{style:`width:${(v*100).toFixed(0)}%`})),h('b',{},Math.round(v*100)+'%'))));
+    return order[0];
+  }
+  function cellFromEvent(e){const t=document.elementFromPoint(e.clientX,e.clientY);return t&&t.dataset&&t.dataset.i!=null?+t.dataset.i:null;}
+  if(KIND==='draw'||KIND==='gray'){
+    let down=false,mode=255;
+    const setPx=n=>{if(n==null)return;const v=KIND==='draw'?mode:brush;if(px[n]!==v){px[n]=v;paintCells();check();}};
+    grid.addEventListener('pointerdown',e=>{e.preventDefault();const n=cellFromEvent(e);if(n==null)return;down=true;mode=KIND==='draw'?(px[n]>0?0:255):brush;setPx(n);});
+    grid.addEventListener('pointermove',e=>{if(down)setPx(cellFromEvent(e));});
+    window.addEventListener('pointerup',()=>{down=false;});
+    function check(){
+      const top=readout();
+      if(top&&top[0]===target&&top[1]>0.4)ctx.win('The bot reads your '+target+' with '+Math.round(top[1]*100)+'% confidence. It only sees numbers, and you drew the right pattern.');
+      else if(top)ctx.say('The bot thinks it is a '+top[0]+' ('+Math.round(top[1]*100)+'%). Keep shaping the '+target+'.','info');
+    }
+    paintCells();readout();
+  }
+  if(KIND==='fool'){
+    const base=px.slice();let fooled=false;
+    grid.addEventListener('pointerdown',e=>{e.preventDefault();const n=cellFromEvent(e);if(n==null)return;px[n]=px[n]>0?0:255;flips=px.filter((v,k)=>v!==base[k]).length;paintCells();after();});
+    function after(){
+      const top=readout();
+      sayBox.textContent='Pixels changed: '+flips;
+      if(top&&top[0]!==7&&!fooled){fooled=true;ctx.win('Fooled! The bot now says '+top[0]+' ('+Math.round(top[1]*100)+'%) after '+flips+' changed pixels. A human still sees a 7.');}
+      else if(top&&top[0]===7&&fooled){fooled=false;ctx.say('The bot is back to 7. Flip more pixels.','info');}
+    }
+    paintCells();readout();sayBox.textContent='Pixels changed: 0';
+  }
+  const tools=h('div',{class:'toolrow'});
+  const numBtn=h('button',{class:'btn small',type:'button','aria-pressed':String(showNums),onclick:()=>{showNums=!showNums;numBtn.setAttribute('aria-pressed',String(showNums));paintCells();}},'Show numbers');
+  tools.append(numBtn);
+  if(KIND==='draw'||KIND==='gray')tools.append(h('button',{class:'btn small',type:'button',onclick:()=>{px=new Array(64).fill(0);paintCells();readout();}},'Clear'));
+  if(KIND==='fool')tools.append(
+    h('button',{class:'btn small',type:'button',onclick:()=>{px=tplPx(7);flips=0;paintCells();readout();sayBox.textContent='Pixels changed: 0';}},'Reset 7'),
+    h('button',{class:'btn small',type:'button',onclick:()=>{for(let k=0;k<3;k++){const n=Math.floor(Math.random()*64);px[n]=px[n]>0?0:255;}flips=px.filter((v,k)=>v!==tplPx(7)[k]).length;paintCells();const top=readout();sayBox.textContent='Pixels changed: '+flips;if(top&&top[0]!==7)ctx.win('Fooled! The bot now says '+top[0]+' after '+flips+' changed pixels.');},},'Add 3 random pixels'));
+  let left;
+  if(KIND==='gray'){
+    const lv=[0,85,170,255];
+    const sw=h('div',{class:'swatches',role:'group','aria-label':'Brightness'},lv.map(v=>{
+      const b=h('button',{class:'sw',type:'button','aria-pressed':String(v===brush),'aria-label':'Brightness '+v,style:`background:rgb(${v},${v},${v})`});
+      b.addEventListener('click',()=>{brush=v;[...sw.children].forEach((x,k)=>x.setAttribute('aria-pressed',String(lv[k]===v)));});return b;}));
+    left=h('div',{},sw,grid,tools);
+  }else if(KIND!=='filter')left=h('div',{},grid,tools);
+  if(KIND==='filter'){
+    let fk='h';const fmap=new Array(36).fill(null);let magAt=null;
+    const fg=h('div',{class:'fgrid'});const fcs=[];for(let n=0;n<36;n++){const c=h('div',{class:'fc'});fcs.push(c);fg.append(c);}
+    const info=h('p',{class:'sub'});
+    const fseg=h('div',{class:'seg',role:'group','aria-label':'Filter'});
+    const drawF=()=>{
+      cells.forEach(c=>c.classList.remove('mag'));
+      if(magAt){const[r,c]=magAt;for(let a=0;a<3;a++)for(let b=0;b<3;b++)cells[(r+a)*8+c+b].classList.add('mag');
+        if(is78()){const k=FILTERS[fk].k;info.textContent='Window sum = '+convAt(px,k,r,c).toFixed(1)+' (multiply each pixel by the filter, then add).';}}
+      fcs.forEach((c,n)=>{const v=fmap[n];if(v==null){c.style.background='#17172B';c.textContent='';}else{const it=clamp(v/4,0,1);c.style.background=`rgba(255,184,31,${(0.08+it*0.92).toFixed(2)})`;c.textContent=is78()?v.toFixed(1):'';c.style.color=it>.5?'#2b1d00':'#aaa';}});
+    };
+    const reveal=(r,c)=>{magAt=[r,c];fmap[r*6+c]=convAt(px,FILTERS[fk].k,r,c);drawF();checkDone();};
+    const checkDone=()=>{if(fmap.every(v=>v!=null)){
+      if(fk==='h')ctx.win('The horizontal filter lit up the top bar of the 7. Try the vertical one too and compare.');
+      else ctx.say('The vertical filter found the long stem and nothing on the top bar. Try the horizontal filter to find the top.','info');}};
+    ['h','v'].forEach(k=>{const b=h('button',{type:'button','aria-pressed':String(k===fk)},FILTERS[k].name);
+      b.addEventListener('click',()=>{fk=k;fmap.fill(null);magAt=null;[...fseg.children].forEach((x,n)=>x.setAttribute('aria-pressed',String(['h','v'][n]===k)));ctx.stop();info.textContent='';drawF();});fseg.append(b);});
+    let down=false;
+    const move=e=>{const n=cellFromEvent(e);if(n==null)return;const r=clamp(Math.floor(n/8)-1,0,5),c=clamp((n%8)-1,0,5);reveal(r,c);};
+    grid.addEventListener('pointerdown',e=>{e.preventDefault();down=true;move(e);});
+    grid.addEventListener('pointermove',e=>{if(down)move(e);});
+    window.addEventListener('pointerup',()=>{down=false;});
+    const scan=h('button',{class:'btn primary small',type:'button'},'Scan automatically');
+    scan.addEventListener('click',()=>{ctx.stop();let n=0;fmap.fill(null);ctx.every(()=>{if(n>=36){ctx.stop();return;}reveal(Math.floor(n/6),n%6);n++;},70);});
+    paintCells();drawF();
+    left=h('div',{},h('h4',{},'The image'),grid,h('div',{class:'toolrow'},numBtn));
+    const right=h('div',{},h('h4',{},'Filter'),fseg,h('div',{class:'toolrow'},scan),h('h4',{style:'margin-top:10px'},'Feature map'),fg,info);
+    ctx.stage.append(h('div',{class:'px3'},left,right));return;
+  }
+  const right=h('div',{},h('h4',{},KIND==='fool'?'What the bot thinks':'The bot guesses'),probBox,sayBox);
+  ctx.stage.append(h('div',{class:'px3'},left,right));
+}
+
+/* ================= GAME 4: Path Pup ================= */
+const L4=[
+ {rows:['S...','....','...B'],mode:'manual',b:'Pup starts out knowing nothing. Press Step to move pup, then rate the move: ⭐ for a good move, ⚡ for a bad one. After a few steps, press Watch pup.'},
+ {rows:['S..#.','.#...','...#.','.#..B'],mode:'goal',b:'Now the only reward is the bone at the end. Train pup for a few trips, then watch. Try the curiosity slider: it sets how often pup explores.'},
+ {rows:['S~~~B','.....','..#..'],mode:'design',b:'Pup takes the shortcut through the puddles. Tap tiles to place ⚡ penalties so pup learns to go around, then train and watch.',avoid:true},
+ {rows:['.....','ST..B','.....'],mode:'design',custom:[[1,1,1]],b:'Uh oh. Pup found a ⭐ that pays every time. Tap the star tile to change its reward, train again, and get pup to the bone.',star:[1,1]}
+];
+function g4Level(ctx,i){
+  const L=L4[i];ctx.brief(L.b);
+  const w=makeWorld(L.rows,L.custom);
+  let eps=0.3,trips=0,pup=w.start.slice(),trail=[],pending=null,steps=0;
+  const maze=h('div',{class:'maze',style:`grid-template-columns:repeat(${w.W},1fr)`});
+  const stat=h('p',{class:'stat'});
+  function draw(){
+    maze.replaceChildren();
+    for(let y=0;y<w.H;y++)for(let x=0;x<w.W;x++){
+      const ch=w.rows[y][x];const cls='mc'+(ch==='#'?' rock':ch==='~'?' puddle':ch==='B'?' goal':'')+(trail.some(t=>t[0]===x&&t[1]===y)?' trail':'');
+      const cell=h('button',{class:cls,type:'button','aria-label':`Tile ${x+1},${y+1}`});
+      const r=w.custom[y][x];
+      if(ch==='#')cell.append('🪨');
+      else if(pup[0]===x&&pup[1]===y)cell.append('🐶');
+      else if(ch==='B')cell.append('🦴');
+      else if(r>0)cell.append('⭐');
+      else if(r<0)cell.append('⚡');
+      else if(ch==='~')cell.append('💧');
+      if(ch!=='#'&&ch!=='B'){
+        const mx=Math.max(...w.Q[y][x]);
+        if(mx>0.03){cell.append(h('span',{class:'arr',style:`opacity:${clamp(mx,0.25,1)}`},ACT[bestA(w,x,y,false)][2]));if(is78())cell.append(h('span',{class:'qv'},mx.toFixed(2)));}
+      }
+      if(L.mode==='design'&&ch!=='#'&&ch!=='B'&&ch!=='S'){
+        cell.addEventListener('click',()=>{const cyc=[0,-1,1];const cur=w.custom[y][x];w.custom[y][x]=cyc[(cyc.indexOf(cur)+1)%3];draw();});
+      }
+      maze.append(cell);
+    }
+    stat.textContent=L.mode==='manual'?'Steps taken: '+steps:'Training trips: '+trips;
+  }
+  function watch(){
+    ctx.stop();const path=greedyPath(w);let k=0;trail=[];pup=w.start.slice();draw();
+    ctx.every(()=>{
+      if(k>=path.length){ctx.stop();finish(path);return;}
+      pup=path[k].slice();trail=path.slice(0,k+1);draw();k++;
+    },320);
+  }
+  function finish(path){
+    const last=path[path.length-1];const reached=last[0]===w.goal[0]&&last[1]===w.goal[1];
+    const wet=path.some(([x,y])=>w.rows[y][x]==='~');
+    const star=L.star&&path.filter(([x,y])=>x===L.star[0]&&y===L.star[1]).length>2;
+    if(reached&&!(L.avoid&&wet)){pup=w.goal.slice();draw();ctx.win('Pup found the bone'+(L.avoid?' without getting wet':'')+' in '+(path.length-1)+' steps.');}
+    else if(reached&&wet)ctx.say('Pup reached the bone but splashed through puddles. Place ⚡ on the puddle tiles, then train more.','bad');
+    else if(star)ctx.say('Pup kept circling the star. It does what you reward, not what you meant. Change the star tile.','bad');
+    else ctx.say('Pup did not reach the bone. Train more trips and watch again.','bad');
+  }
+  const eSl=h('input',{type:'range',min:'0',max:'100',value:'30','aria-label':'Curiosity'});
+  const eOut=h('output',{},'30%');
+  eSl.addEventListener('input',()=>{eps=eSl.value/100;eOut.textContent=eSl.value+'%';});
+  const curi=h('div',{},h('b',{},'Curiosity'),h('p',{class:'sub'},'Low: repeat what worked. High: try new moves.'),h('div',{class:'dial'},h('span',{},'0'),eSl,eOut));
+  const ctl=h('div',{class:'ctl'},stat);
+  if(L.mode==='manual'){
+    const stepBtn=h('button',{class:'btn primary',type:'button'},'Step');
+    const good=h('button',{class:'btn',type:'button',disabled:'true'},'⭐ Good move'),bad=h('button',{class:'btn',type:'button',disabled:'true'},'⚡ Bad move');
+    const wb=h('button',{class:'btn',type:'button'},'Watch pup');
+    stepBtn.addEventListener('click',()=>{
+      const [x,y]=pup;const a=pickA(w,x,y,Math.max(eps,0.5));const s=wStep(w,x,y,a);
+      pending={x,y,a,s};pup=[s.nx,s.ny];steps++;trail=[];draw();stepBtn.disabled=true;good.disabled=false;bad.disabled=false;
+      ctx.say('Rate that move: did pup go the right way?','info');
+    });
+    const rate=r=>{
+      const p=pending;qUpdate(w,p.x,p.y,p.a,r,p.s.nx,p.s.ny,p.s.done);pending=null;
+      if(p.s.done){pup=w.start.slice();ctx.say('Pup found the bone! Back to the start. Press Watch pup when ready.','good');}
+      else ctx.say(r>0?'Pup remembers that was good.':'Pup remembers that was bad.','info');
+      good.disabled=true;bad.disabled=true;stepBtn.disabled=false;draw();
+    };
+    good.addEventListener('click',()=>rate(1));bad.addEventListener('click',()=>rate(-1));
+    wb.addEventListener('click',()=>{if(steps<6){ctx.say('Give pup at least 6 rated steps first.','bad');return;}pending=null;good.disabled=true;bad.disabled=true;stepBtn.disabled=false;watch();});
+    ctl.append(stepBtn,h('div',{style:'display:flex;gap:8px;flex-wrap:wrap'},good,bad),wb,h('p',{class:'sub'},'Tip: reward moves that get closer to the bone 🦴.'));
+  }else{
+    const tr=h('button',{class:'btn primary',type:'button'},'Train 20 trips');
+    tr.addEventListener('click',()=>{for(let k=0;k<20;k++)episode(w,eps);trips+=20;trail=[];pup=w.start.slice();draw();ctx.say('Pup trained for 20 more trips. Bright arrows show what pup thinks is best.','info');});
+    const wb=h('button',{class:'btn',type:'button'},'Watch pup');
+    wb.addEventListener('click',()=>{if(!trips){ctx.say('Train pup first.','bad');return;}watch();});
+    const rs=h('button',{class:'btn small',type:'button'},'Reset memory');
+    rs.addEventListener('click',()=>{for(let y=0;y<w.H;y++)for(let x=0;x<w.W;x++)w.Q[y][x]=[0,0,0,0];trips=0;trail=[];pup=w.start.slice();draw();ctx.say('Pup forgot everything.','info');});
+    ctl.append(tr,wb,curi,rs);
+  }
+  draw();
+  ctx.stage.append(h('div',{class:'pupwrap'},maze,ctl));
+}
+
+/* ================= GAME 5: Next-Word Wizard ================= */
+const SMALL=CORPUS.slice(0,10);
+function bars(dist,pick,n){
+  return h('div',{},dist.slice(0,n||5).map((o,k)=>h('div',{class:'pb5'+(o.w===pick?' you':'')},h('span',{},o.w),h('div',{class:'t'},h('i',{style:`width:${Math.max(o.p*100,2)}%`})),h('b',{},Math.round(o.p*100)+'%'))));
+}
+function g5Level(ctx,i){
+  if(i===0||i===1){
+    const prompts=i===0?[{t:'The cat sat on the',o:['mat','roof','moon','floor']}]:[{t:'The cat sat in the',o:['sun','cockpit','tower','pond']},{t:'The pilot sat in the',o:['sun','cockpit','tower','pond']},{t:'The wizard sat in the',o:['sun','cockpit','tower','pond']}];
+    ctx.brief(i===0?'Guess first. Which word comes next? Then see what the model predicts.':'Same ending words, different subject. Guess each one, then compare what the model says.');
+    let k=0;const box=h('div',{class:'wz'});
+    const showP=()=>{
+      const P=prompts[k];let picked=null;
+      const sent=h('div',{class:'sent'},P.t+' ',h('u',{},'___'));
+      const opts=h('div',{class:'opts'});const out=h('div');
+      P.o.forEach(w=>{const b=h('button',{class:'opt',type:'button'},w);b.addEventListener('click',()=>{
+        if(picked)return;picked=w;b.classList.add('pick');sent.lastChild.textContent=w;
+        const d=lmDist(P.t,CORPUS,1);const rank=d.findIndex(o=>o.w===w);
+        out.replaceChildren(h('div',{class:'mbox'},h('h4',{},'What the model predicts'),bars(d,w,5),is78()?h('p',{class:'sub'},'Each bar is a probability. They add up to 100% across every word the model knows.'):null,
+          h('p',{class:'sub'},rank===0?'You matched the model. It counted this word most often after those words.':rank<5&&rank>0?'Your word was in the top five. Not the top pick, but plausible.':'Your word was unlikely for this model. It never saw that pattern much.')));
+        if(k<prompts.length-1){const nb=h('button',{class:'btn primary',type:'button'},'Next sentence');nb.addEventListener('click',()=>{k++;showP();});out.append(nb);ctx.say('Reveal done. Compare with your guess.','info');}
+        else ctx.win(i===0?'The model predicts from patterns in text. It is not thinking, it is counting.':'Same last words, different top pick. The earlier words changed the prediction.');
+      });opts.append(b);});
+      box.replaceChildren(sent,opts,out);
+    };
+    showP();ctx.stage.append(box);
+  }
+  if(i===2){
+    ctx.brief('Small models know less. Pick a sentence and compare a small model (10 sentences) with a big one (52 sentences).');
+    const ps=['The dog sat on the','The robot sat on the','The cat sat on the'];let seen={};
+    const out=h('div',{class:'cols2'});const opts=h('div',{class:'opts'});
+    ps.forEach(t=>{const b=h('button',{class:'opt',type:'button'},t+' ___');b.addEventListener('click',()=>{
+      [...opts.children].forEach(x=>x.classList.remove('pick'));b.classList.add('pick');seen[t]=1;
+      out.replaceChildren(h('div',{class:'mbox'},h('h4',{},'Small model'),bars(lmDist(t,SMALL,1),null,5)),h('div',{class:'mbox'},h('h4',{},'Big model'),bars(lmDist(t,CORPUS,1),null,5)));
+      if(Object.keys(seen).length>=2)ctx.win('The big model saw more text, so it knows about robots and porches. More data means better predictions.');
+      else ctx.say('Try another sentence to compare.','info');});opts.append(b);});
+    ctx.stage.append(h('div',{class:'wz'},opts,out));
+  }
+  if(i===3){
+    ctx.brief('Build a story one word at a time. Tap a suggested word. Turn the creativity dial between safe and wild.');
+    let T=1,text='The wizard';const STEPS=8;let n=0;
+    const story=h('div',{class:'story','aria-live':'polite'},text);const chips=h('div',{class:'opts'});
+    const dl=h('input',{type:'range',min:'0',max:'100',value:'30','aria-label':'Creativity'});const dv=h('output',{},'');
+    const setT=()=>{T=0.4+dl.value/100*2.6;dv.textContent=is78()?'T = '+T.toFixed(1):(dl.value<34?'safe':dl.value<67?'curious':'wild');};
+    dl.addEventListener('input',()=>{setT();suggest();});
+    function suggest(){
+      chips.replaceChildren();if(n>=STEPS)return;
+      const d=lmDist(text.toLowerCase(),CORPUS,T);
+      sampleK(d,5).forEach(o=>{const b=h('button',{class:'opt',type:'button'},o.w+'  '+Math.round(o.p*100)+'%');
+        b.addEventListener('click',()=>{text+=' '+o.w;n++;story.textContent=text;suggest();
+          if(n>=STEPS){story.textContent=text+'. The end.';ctx.win('Story finished. At low creativity the model picks likely words. At high creativity it picks unlikely ones, which can be silly.');}});
+        chips.append(b);});
+    }
+    setT();suggest();
+    ctx.stage.append(h('div',{class:'wz'},story,h('div',{class:'dial'},h('span',{},'Safe'),dl,h('span',{},'Wild ',dv)),h('p',{class:'sub'},'Next word choices (with probability):'),chips,
+      h('button',{class:'btn small',type:'button',onclick:()=>{text='The wizard';n=0;story.textContent=text;suggest();}},'Start over')));
+  }
+}
+
+/* ================= GAME 6: Bias Busters ================= */
+const PETS={dog:{nm:'Dogs',em:'🐕'},cat:{nm:'Cats',em:'🐈'},rabbit:{nm:'Rabbits',em:'🐇'},bird:{nm:'Birds',em:'🦜'}};
+const acc=n=>1-0.85*Math.exp(-n/2.5);
+const ART=[
+ {nm:'Crayon',em:'🖍️',q:[4,2,5,1,3,2],t:[0,0,0,0,0,0]},
+ {nm:'Paint',em:'🎨',q:[2,4,3,5,1,2],t:[1,0,0,0,0,0]},
+ {nm:'Digital',em:'💻',q:[3,5,2,4,1,2],t:[1,1,1,1,1,0]},
+ {nm:'Collage',em:'✂️',q:[5,1,2,3,4,2],t:[0,1,0,0,0,0]}];
+const VOTES=[
+ {q:'Should AI choose who wins a school prize?',c:[12,7,9]},
+ {q:'Should AI decide who gets into a club?',c:[5,10,14]},
+ {q:'Should AI grade essays with no teacher check?',c:[3,8,19]}];
+function g6Level(ctx,i){
+  if(i===0){
+    ctx.brief('The Pet Finder robot learned from these 12 photo cards. Look at the cards. Which group is missing?');
+    const cards=['dog','dog','dog','dog','dog','dog','dog','dog','dog','rabbit','rabbit','bird'];
+    const gal=h('div',{class:'cards6',style:'display:flex;flex-wrap:wrap;gap:6px;font-size:2rem;padding:12px;border-radius:16px;background:var(--surface2)'},cards.map(c=>h('span',{},PETS[c].em)));
+    const opts=h('div',{class:'opts'});
+    Object.keys(PETS).forEach(k=>{const b=h('button',{class:'opt',type:'button'},PETS[k].em+' '+PETS[k].nm);
+      b.addEventListener('click',()=>{if(k==='cat'){b.classList.add('pick');ctx.win('Cats are missing. A robot trained without cats will be bad at recognizing them.');}else ctx.say(PETS[k].nm+' are in the cards. Look again for a group with no photos at all.','bad');});opts.append(b);});
+    ctx.stage.append(h('div',{class:'fair'},gal,h('p',{},'Tap the group that has no cards.'),opts));
+  }
+  if(i===1){
+    ctx.brief('Balance the training cards so the robot is fair to every group. Use + and − to add or remove cards. Aim for a small gap.');
+    const n={dog:9,rabbit:2,bird:1,cat:0};
+    const list=h('div'),meters=h('div'),gap=h('div',{class:'gapbox'});
+    const draw=()=>{
+      list.replaceChildren(...Object.keys(PETS).map(k=>{
+        const minus=h('button',{class:'sq',type:'button','aria-label':'Remove '+PETS[k].nm},'−'),plus=h('button',{class:'sq',type:'button','aria-label':'Add '+PETS[k].nm},'+');
+        minus.addEventListener('click',()=>{if(n[k]>0){n[k]--;draw();}});plus.addEventListener('click',()=>{if(n[k]<12){n[k]++;draw();}});
+        return h('div',{class:'grp',style:'margin-bottom:8px'},h('span',{class:'nm'},PETS[k].nm),h('div',{class:'cards6'},Array.from({length:n[k]},()=>PETS[k].em)),h('div',{class:'stepper'},minus,plus));}));
+      const a=Object.keys(PETS).map(k=>acc(n[k]));
+      meters.replaceChildren(...Object.keys(PETS).map((k,ix)=>h('div',{class:'meter'},h('span',{},PETS[k].nm),h('div',{class:'t'},h('i',{style:`width:${a[ix]*100}%`})),h('b',{},Math.round(a[ix]*100)+'%'))));
+      const g=Math.round((Math.max(...a)-Math.min(...a))*100);
+      gap.className='gapbox '+(g<=10?'ok':'no');gap.textContent='Fairness gap: '+g+' points between best and worst group'+(is78()?' (accuracy range = max − min)':'');
+      if(g<=10&&n.cat>=3){ctx.win('Balanced. Every group gets a similar score because every group has enough examples.');}
+      else ctx.say(g<=10?'Add some cats first.':'The robot does well on groups it saw a lot and badly on the rest. Keep balancing.','info');
+    };
+    draw();
+    ctx.stage.append(h('div',{class:'fair'},h('h4',{},'Training cards'),list,h('h4',{},'How well the robot recognizes each group'),meters,gap));
+  }
+  if(i===2){
+    ctx.brief('A robot judge learned from past art contests. Compare the stars (quality) with the trophies. Tap a card to give or remove a trophy so winners are fairly chosen by quality, 4 stars or more.');
+    const t=ART.map(a=>a.t.slice());
+    const rowsEl=h('div'),meters=h('div'),gap=h('div',{class:'gapbox'});
+    const draw=()=>{
+      rowsEl.replaceChildren(...ART.map((a,r)=>h('div',{class:'art'},h('span',{class:'nm'},a.em+' '+a.nm),h('div',{class:'arts'},a.q.map((q,c)=>{
+        const b=h('button',{class:'acard'+(t[r][c]?' win':''),type:'button','aria-label':`${a.nm} entry, ${q} stars, ${t[r][c]?'has trophy':'no trophy'}`},h('span',{},t[r][c]?'🏆':'·'),h('span',{class:'st'},'★'.repeat(q)));
+        b.addEventListener('click',()=>{t[r][c]=t[r][c]?0:1;draw();});return b;})))));
+      const rates=ART.map((a,r)=>t[r].reduce((x,y)=>x+y,0)/6);
+      meters.replaceChildren(...ART.map((a,r)=>h('div',{class:'meter'},h('span',{},a.nm),h('div',{class:'t'},h('i',{style:`width:${rates[r]*100}%`})),h('b',{},Math.round(rates[r]*100)+'%'))));
+      const g=Math.round((Math.max(...rates)-Math.min(...rates))*100);
+      gap.className='gapbox '+(g<=15?'ok':'no');gap.textContent='Win-rate gap between art styles: '+g+' points';
+      const fair=ART.every((a,r)=>a.q.every((q,c)=>!!t[r][c]===(q>=4)));
+      if(fair)ctx.win('Fair labels. Trophies now follow quality, not the style of art. The robot will learn the right lesson.');
+      else ctx.say('The robot learns that one style wins most. Check: should this entry really have a trophy?','info');
+    };
+    draw();
+    ctx.stage.append(h('div',{class:'fair'},h('h4',{},'Past contests'),rowsEl,h('h4',{},'How often the robot predicts a win'),meters,gap));
+  }
+  if(i===3){
+    ctx.brief('Fairness questions do not have one right answer. Vote on each one and see how your class might vote.');
+    const voted={};const box=h('div');
+    VOTES.forEach((v,ix)=>{
+      const wrap=h('div',{class:'vote'},h('b',{},v.q));const btns=h('div',{class:'vbtns'});const res=h('div');
+      ['Yes','Unsure','No'].forEach((l,k)=>{const b=h('button',{class:'btn',type:'button'},l);b.addEventListener('click',()=>{
+        if(voted[ix]!=null)return;voted[ix]=k;b.classList.add('sel');
+        const c=v.c.slice();c[k]++;const tot=c.reduce((a,b)=>a+b,0);
+        res.replaceChildren(...['Yes','Unsure','No'].map((nm,j)=>h('div',{class:'vb'+(j===k?' mine':'')},h('span',{},nm),h('div',{class:'t'},h('i',{style:`width:${c[j]/tot*100}%`})),h('b',{},String(c[j])))));
+        if(Object.keys(voted).length===VOTES.length)ctx.win('Votes are in. People disagree, and that is why humans must stay in charge of decisions about people.');
+        else ctx.say('Vote on the other questions too.','info');});btns.append(b);});
+      wrap.append(btns,res);box.append(wrap);
+    });
+    ctx.stage.append(box);
+  }
+}
+
+/* ================= registry ================= */
+GAMES.push(
+ {id:1,title:'The Gatekeeper',concept:'Weights and thresholds',tagline:'A robot bouncer adds up clues about each guest. Set the weights that decide who gets in.',part:'Brain',icon:'🧠',levels:['One clue','Two clues','A blocker','Hidden rule'],level:g1Level,
+  quiz:{q:'Which weight would you turn up to let more costumed guests in?',opts:['The Costume weight','The Noisy weight','The Snacks weight'],ans:0,hint:'Think about which clue you want to count for more.',why:'A weight says how much one clue counts toward the score. That is how a neuron decides.'}},
+ {id:2,title:'Teach-the-Bot Sorter',concept:'Learning from examples',tagline:'Teach a baby robot to sort recycling by showing it examples, then test what it learned.',part:'Memory',icon:'💾',levels:['First lesson','Too little data','Pick your examples','Fix the labels'],level:g2Level,
+  quiz:{q:'The bot called a glass bottle trash. What is the most likely reason?',opts:['It had too few glass examples','Glass is always trash','The bot got tired'],ans:0,hint:'What did we teach it?',why:'A bot is only as smart as the examples it learned from. More varied examples make better AI.'}},
+ {id:3,title:'Pixel Detective',concept:'How computers see',tagline:'Paint pixels, see the numbers behind them, and learn how a computer finds shapes.',part:'Eyes',icon:'👀',levels:['Draw it','Shades of gray','Fool the AI','Be the filter'],level:g3Level,
+  quiz:{q:'What does the bot actually see when it looks at your drawing?',opts:['A picture, like we do','Numbers and patterns','The title we wrote'],ans:1,hint:'Look at the grid with the numbers on.',why:'Computers do not see pictures. They see grids of numbers and look for patterns in them.'}},
+ {id:4,title:'Path Pup',concept:'Learning by reward',tagline:'A robot puppy learns a maze from rewards. Be careful what you reward.',part:'Legs',icon:'🦿',levels:['Rate each step','Reward at the end','Design rewards','Reward hacking'],level:g4Level,
+  quiz:{q:'What happens if the curiosity slider is at zero?',opts:['Pup only repeats what it already knows','Pup explores everywhere','Pup stops moving'],ans:0,hint:'Curiosity is how often pup tries something new.',why:'Pup does what you reward, not what you meant. And without curiosity it may never find a better path.'}},
+ {id:5,title:'Next-Word Wizard',concept:'Language models',tagline:'Guess the next word, then see how a language model predicts it from patterns.',part:'Voice',icon:'🗣️',levels:['Guess and reveal','Context matters','Small vs big','Story chain'],level:g5Level,
+  quiz:{q:'Why does a high creativity setting make silly sentences?',opts:['It picks unlikely words more often','It forgets how to spell','It reads more books'],ans:0,hint:'Think about which words the dial allows.',why:'Chatbots predict the next word from patterns. Wild settings choose unlikely words, which is also why chatbots can make things up.'}},
+ {id:6,title:'Bias Busters',concept:'Fair and responsible AI',tagline:'Find what is missing from a robot\'s training data and make it fair for everyone.',part:'Heart',icon:'💜',levels:['Spot the gap','Balance the data','Hidden bias','Class debate'],level:g6Level,
+  quiz:{q:'Who might be left out if we only train on these photos?',opts:['Groups with few or no examples','Nobody, data is always fair','Only the biggest group'],ans:0,hint:'Think about the group that was missing.',why:'AI is not automatically fair. People are responsible for the data they choose.'}}
+);
+
+hub();
+})();
+</script>
+</body>
+</html>
